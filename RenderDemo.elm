@@ -11,6 +11,7 @@ type alias CellID = Int
 type Msg
   = Push
   | Pop
+  | OnCellAdded CellID
 
 type alias Model =
   { cells : List CellID
@@ -31,12 +32,19 @@ update message ({cells} as model) =
       in
       ({ model
         | cells = [uid] ++ cells
-      }, onCellAdded uid)
+      }, msgToCmd (OnCellAdded uid))
 
     Pop ->
       case cells of
           [] -> (model, Cmd.none)
           _ :: cells -> ({ model | cells = cells }, Cmd.none)
+
+    OnCellAdded counter ->
+      (model, onCellAdded counter)
+
+msgToCmd : msg -> Cmd msg
+msgToCmd msg =
+      Task.perform identity identity (Task.succeed msg)
 
 port onCellAdded : CellID -> Cmd msg
 
