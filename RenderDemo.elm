@@ -1,6 +1,7 @@
 port module RenderDemo exposing (..)
 
 import Task
+import Update.Extra as Update
 import Html exposing (..)
 import Html.App as App
 import Html.Events exposing (..)
@@ -32,7 +33,8 @@ update message ({cells} as model) =
       in
       ({ model
         | cells = [uid] ++ cells
-      }, msgToCmd (OnCellAdded uid))
+      }, Cmd.none)
+      |> Update.andThen update (OnCellAdded uid)
 
     Pop ->
       case cells of
@@ -41,10 +43,6 @@ update message ({cells} as model) =
 
     OnCellAdded counter ->
       (model, onCellAdded counter)
-
-msgToCmd : msg -> Cmd msg
-msgToCmd msg =
-      Task.perform identity identity (Task.succeed msg)
 
 port onCellAdded : CellID -> Cmd msg
 
