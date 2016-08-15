@@ -8,7 +8,7 @@ Running:
 ```bash
 elm-make RenderDemo.elm --output RenderDemo.js
 ```
-and then opend index.html file in browser.
+and then open the index.html file in browser.
 
 
 
